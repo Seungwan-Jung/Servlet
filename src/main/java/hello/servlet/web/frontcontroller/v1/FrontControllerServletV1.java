@@ -21,7 +21,7 @@ public class FrontControllerServletV1 extends HttpServlet {
     public FrontControllerServletV1() {
         controllerMap.put("/front-controller/v1/members/new-form", new MemberFormControllerV1());
         controllerMap.put("/front-controller/v1/members/save", new MemberSaveControllerV1());
-        controllerMap.put("front-controller/v1/members", new MemberListControllerV1());
+        controllerMap.put("/front-controller/v1/members", new MemberListControllerV1());
 
     }
 
@@ -30,13 +30,11 @@ public class FrontControllerServletV1 extends HttpServlet {
         System.out.println("FrontControllerServletV1.service");
 
         String requestURI = request.getRequestURI();
-
         ControllerV1 controller = controllerMap.get(requestURI);
         if(controller==null){
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-
         controller.process(request,response);
 
     }
