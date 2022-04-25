@@ -8,35 +8,38 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
-@RequestMapping("/springmvc/v3/members")
+@RequestMapping("/springmvc/v2/members")
 public class SpringMemberControllerV2 {
     private MemberRepository memberRepository = MemberRepository.getInstance();
 
-    @GetMapping("/new-form")
-    public String newForm() {
-        return "new-form";
+    @RequestMapping("/new-form")
+    public ModelAndView newForm() {
+        return new ModelAndView("new-form");
     }
-
-    @PostMapping("/save")
-    public String save(
-            @RequestParam("username") String username,
-            @RequestParam("age") int age,
-            Model model) {
+    @RequestMapping("/save")
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse
+            response) {
+        String username = request.getParameter("username");
+        int age = Integer.parseInt(request.getParameter("age"));
         Member member = new Member(username, age);
         memberRepository.save(member);
-        model.addAttribute("member", member);
-        return "save-result";
+        ModelAndView mav = new ModelAndView("save-result");
+        mav.addObject("member", member);
+        return mav;
     }
-
-    @GetMapping
-    public String members(Model model) {
+    @RequestMapping
+    public ModelAndView members() {
         List<Member> members = memberRepository.findAll();
-        model.addAttribute("members", members);
-        return "members";
+        ModelAndView mav = new ModelAndView("members");
+        mav.addObject("members", members);
+        return mav;
     }
 
 }
